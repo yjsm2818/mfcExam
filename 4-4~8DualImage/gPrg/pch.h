@@ -10,4 +10,10 @@
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 
+
+#define COLOR_RED	RGB(0xff, 0, 0)
+#define COLOR_GREEN RGB(0, 0xff, 0)
+
+#define MAX_POINT	1000
+
 #endif //PCH_H
