@@ -59,6 +59,7 @@ END_MESSAGE_MAP()
 
 CgPrgDlg::CgPrgDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_GPRG_DIALOG, pParent)
+	, nRadius(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -66,6 +67,7 @@ CgPrgDlg::CgPrgDlg(CWnd* pParent /*=nullptr*/)
 void CgPrgDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_NRADIUS, nRadius);
 }
 
 BEGIN_MESSAGE_MAP(CgPrgDlg, CDialogEx)
@@ -77,6 +79,7 @@ BEGIN_MESSAGE_MAP(CgPrgDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_PROCESS, &CgPrgDlg::OnBnClickedBtnProcess)
 	ON_BN_CLICKED(IDC_BTN_MAKE_PATTERN, &CgPrgDlg::OnBnClickedBtnMakePattern)
 	ON_BN_CLICKED(IDC_BTN_GET_DATA, &CgPrgDlg::OnBnClickedBtnGetData)
+	ON_BN_CLICKED(IDC_BTN_GET_CIRCLE, &CgPrgDlg::OnBnClickedBtnGetCircle)
 END_MESSAGE_MAP()
 
 
@@ -228,6 +231,7 @@ void CgPrgDlg::OnBnClickedBtnTest()
 	m_pDlgImgResult->Invalidate();
 }
 
+
 void CgPrgDlg::resetImgResult() 
 {
 	int nWidth = m_pDlgImgResult->m_image.GetWidth();
@@ -280,14 +284,14 @@ void CgPrgDlg::OnBnClickedBtnGetData()
 	int nHeight = m_pDlgImage->m_image.GetHeight();
 	int nPitch = m_pDlgImage->m_image.GetPitch();
 
-	int nTh = 0x80;
+	int nTh = 0xff;
 	CRect rect(0, 0, nWidth, nHeight);
 	int nSumX = 0;
 	int nSumY = 0;
 	int nCount = 0;
 	for (int j = rect.top; j < rect.bottom; ++j) {
 		for (int i = rect.left; i < rect.right; ++i) {
-			if (fm[j * nPitch + i] > nTh){
+			if (fm[j * nPitch + i] != nTh){
 				nSumX += i;
 				nSumY += j;
 				++nCount;
@@ -299,3 +303,78 @@ void CgPrgDlg::OnBnClickedBtnGetData()
 
 	cout << dCenterX << "\t" << dCenterY << endl;
 }
+
+// #H.W code
+void CgPrgDlg::OnBnClickedBtnGetCircle()
+{
+	UpdateData(TRUE);
+	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits();
+	int nWidth = m_pDlgImage->m_image.GetWidth();
+	int nHeight = m_pDlgImage->m_image.GetHeight();
+	int nPitch = m_pDlgImage->m_image.GetPitch();
+
+	int nRandX = rand() % (nWidth - 2 * nRadius);
+	int nRandY = rand() % (nHeight - 2 * nRadius);
+
+	centerOfGravity(fm, nRandX, nRandY, nRadius);
+
+	
+	CClientDC dc(this);
+	if (m_pDlgImage->m_image)
+		m_pDlgImage->m_image.Draw(dc, 0, 0);
+	int nCenterX = nRandX + nRadius;
+	int nCenterY = nRandY + nRadius;
+	drawLine(&dc, nCenterX, nCenterY, nRadius);
+}
+
+void CgPrgDlg::centerOfGravity(unsigned char* fm,int x,int y, int nRadius, int scale)
+{	
+	int nSumX = 0;
+	int nSumY = 0;
+	int nCount = 0;
+
+	for (int j = y; j < y + nRadius * 2; ++j) {
+		for (int i = x; i < x + nRadius * 2; ++i) {
+			if (isInCircle(i, j, x + nRadius, y + nRadius, nRadius)) {
+				nSumX += i;
+				nSumY += j;
+				++nCount;
+			}
+		}
+	}
+	double dCenterX = (double)nSumX / nCount;
+	double dCenterY = (double)nSumY / nCount;
+
+	cout << dCenterX << "\t" << dCenterY << endl;
+}
+
+BOOL CgPrgDlg::isInCircle(int x, int y, int nCenterX, int nCenterY, int nRadius)
+{
+	const double dX = x - nCenterX;
+	const double dY = y - nCenterY;
+	const double dDist = dX * dX + dY * dY;
+
+	return dDist < nRadius * nRadius;
+}
+
+
+void CgPrgDlg::drawLine(CDC* pDC, int nCenterX, int centerY, int nRadius)
+{
+	CRect rect(nCenterX - nRadius, centerY - nRadius, nCenterX + nRadius, centerY + nRadius);
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 2, COLOR_YELLOW);
+	CPen* pOldPen = pDC->SelectObject(&pen);
+	
+	pDC->Ellipse(rect);
+
+	pDC->MoveTo(nCenterX - nRadius, centerY);
+	pDC->LineTo(nCenterX + nRadius, centerY);
+	pDC->MoveTo(nCenterX, centerY - nRadius);
+	pDC->LineTo(nCenterX, centerY + nRadius);
+
+	pDC->SelectObject(pOldPen);
+}
+
+
+
+

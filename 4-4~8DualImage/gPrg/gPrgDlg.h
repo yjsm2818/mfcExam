@@ -44,4 +44,12 @@ public:
 	afx_msg void OnBnClickedBtnProcess();
 	afx_msg void OnBnClickedBtnMakePattern();
 	afx_msg void OnBnClickedBtnGetData();
+	afx_msg void OnBnClickedBtnGetCircle();
+	int nRadius;
+	void centerOfGravity(unsigned char* fm, int x, int y, int nRadius, int scale = 0x00);
+	BOOL isInCircle(int x, int y, int nCenterX, int nCenterY, int nRadius);
+
+	void drawLine(CDC* pDC, int x, int y, int nRadius);
+
+
 };

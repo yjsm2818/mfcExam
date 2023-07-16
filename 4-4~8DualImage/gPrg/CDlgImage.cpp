@@ -60,8 +60,8 @@ BOOL CDlgImage::OnInitDialog()
 
 void CDlgImage::InitImage() 
 {
-	const int nWidth = 4096*5;
-	const int nHeight = 4096*5;
+	const int nWidth = 640;
+	const int nHeight = 480;
 	const int nBpp = 8;
 
 	m_image.Create(nWidth, -nHeight, nBpp);

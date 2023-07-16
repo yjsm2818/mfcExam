@@ -14,8 +14,10 @@
 #define IDC_BTN_TEST                    1002
 #define IDC_BTN_PROCESS                 1003
 #define IDC_BTN_MAKE_PATTERN            1004
-#define IDC_BTN_MAKE_PATTERN2           1005
 #define IDC_BTN_GET_DATA                1005
+#define IDC_BTN_GET_CIRCLE              1006
+#define IDC_RADIUS                      1008
+#define IDC_NRADIUS                     1008
 
 // Next default values for new objects
 // 
@@ -23,7 +25,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1003
+#define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif
