@@ -75,6 +75,8 @@ BEGIN_MESSAGE_MAP(CgPrgDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BTN_TEST, &CgPrgDlg::OnBnClickedBtnTest)
 	ON_BN_CLICKED(IDC_BTN_PROCESS, &CgPrgDlg::OnBnClickedBtnProcess)
+	ON_BN_CLICKED(IDC_BTN_MAKE_PATTERN, &CgPrgDlg::OnBnClickedBtnMakePattern)
+	ON_BN_CLICKED(IDC_BTN_GET_DATA, &CgPrgDlg::OnBnClickedBtnGetData)
 END_MESSAGE_MAP()
 
 
@@ -250,4 +252,50 @@ void CgPrgDlg::OnBnClickedBtnProcess()
 	auto end = std::chrono::system_clock::now();
 	auto millisec = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	cout << nRet << "\t" << millisec.count() << "ms" << endl;
+}
+
+
+void CgPrgDlg::OnBnClickedBtnMakePattern()
+{
+	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits();
+	int nWidth = m_pDlgImage->m_image.GetWidth();
+	int nHeight = m_pDlgImage->m_image.GetHeight();
+	int nPitch = m_pDlgImage->m_image.GetPitch();
+	memset(fm, 0, nWidth * nHeight);
+
+	CRect rect(100, 200, 150, 400);
+	for (int j = rect.top; j < rect.bottom; ++j){
+		for (int i = rect.left; i < rect.right; ++i) {
+			fm[j * nPitch + i] = rand()%0xff;
+		}
+	}
+	m_pDlgImage->Invalidate();
+}
+
+
+void CgPrgDlg::OnBnClickedBtnGetData()
+{
+	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits();
+	int nWidth = m_pDlgImage->m_image.GetWidth();
+	int nHeight = m_pDlgImage->m_image.GetHeight();
+	int nPitch = m_pDlgImage->m_image.GetPitch();
+
+	int nTh = 0x80;
+	CRect rect(0, 0, nWidth, nHeight);
+	int nSumX = 0;
+	int nSumY = 0;
+	int nCount = 0;
+	for (int j = rect.top; j < rect.bottom; ++j) {
+		for (int i = rect.left; i < rect.right; ++i) {
+			if (fm[j * nPitch + i] > nTh){
+				nSumX += i;
+				nSumY += j;
+				++nCount;
+			}
+		}
+	}
+	double dCenterX = (double)nSumX / nCount;
+	double dCenterY = (double)nSumY / nCount;
+
+	cout << dCenterX << "\t" << dCenterY << endl;
 }

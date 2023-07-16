@@ -42,4 +42,6 @@ public:
 	afx_msg void OnBnClickedBtnTest();
 	void resetImgResult();
 	afx_msg void OnBnClickedBtnProcess();
+	afx_msg void OnBnClickedBtnMakePattern();
+	afx_msg void OnBnClickedBtnGetData();
 };
