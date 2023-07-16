@@ -36,7 +36,7 @@ END_MESSAGE_MAP()
 #include"gPrgDlg.h"
 void CDlgImage::OnBnClickedBtnUpParent()
 {
-	static int n = 100;
+	static int n = 99;
 	CgPrgDlg* pDlg = (CgPrgDlg*)m_pParent;
 	pDlg->callFunc(++n);
 }
