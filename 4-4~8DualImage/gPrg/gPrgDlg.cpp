@@ -74,6 +74,7 @@ BEGIN_MESSAGE_MAP(CgPrgDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BTN_TEST, &CgPrgDlg::OnBnClickedBtnTest)
+	ON_BN_CLICKED(IDC_BTN_PROCESS, &CgPrgDlg::OnBnClickedBtnProcess)
 END_MESSAGE_MAP()
 
 
@@ -205,17 +206,17 @@ void CgPrgDlg::OnBnClickedBtnTest()
 		fm[y * nPitch + x] = rand()%0xff;
 	}
 	int nindex = 0;
-	int nTH = 100;
+	int nTh = 100;
 	
 	for (int j = 0; j < nHeight; ++j) {
 		for (int i = 0; i < nWidth; ++i) {
-			if (fm[j * nPitch + i] > nTH) {
+			if (fm[j * nPitch + i] > nTh) {
 				//m_pDlgImgResult[m_pDlgImgResult->m_nDataCount].m_ptData;
 				if (m_pDlgImgResult->m_nDataCount < MAX_POINT) {
 					m_pDlgImgResult->m_ptData[nindex].x = i;
 					m_pDlgImgResult->m_ptData[nindex].y = j;
 					m_pDlgImgResult->m_nDataCount = ++nindex;
-					cout << nindex << ":" << i << "," << j << endl;
+					//cout << nindex << ":" << i << "," << j << endl;
 				}
 			}
 		}
@@ -236,4 +237,17 @@ void CgPrgDlg::resetImgResult()
 	for (int i = 0; i < MAX_POINT; ++i){
 		m_pDlgImgResult->m_ptData[i] = CPoint(0, 0);
 	}
+}
+
+#include "CProcess.h"
+#include<chrono>
+void CgPrgDlg::OnBnClickedBtnProcess()
+{
+	CProcess process;
+
+	auto start = std::chrono::system_clock::now();
+	int nRet = process.getStarInfo(&m_pDlgImage->m_image, 100);
+	auto end = std::chrono::system_clock::now();
+	auto millisec = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	cout << nRet << "\t" << millisec.count() << "ms" << endl;
 }

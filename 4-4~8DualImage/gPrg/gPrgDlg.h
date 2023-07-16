@@ -41,4 +41,5 @@ public:
 	void callFunc(int n);
 	afx_msg void OnBnClickedBtnTest();
 	void resetImgResult();
+	afx_msg void OnBnClickedBtnProcess();
 };

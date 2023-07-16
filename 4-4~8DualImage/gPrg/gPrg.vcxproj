@@ -184,6 +184,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CDlgImage.h" />
+    <ClInclude Include="CProcess.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="gPrg.h" />
     <ClInclude Include="gPrgDlg.h" />
@@ -193,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDlgImage.cpp" />
+    <ClCompile Include="CProcess.cpp" />
     <ClCompile Include="gPrg.cpp" />
     <ClCompile Include="gPrgDlg.cpp" />
     <ClCompile Include="pch.cpp">
